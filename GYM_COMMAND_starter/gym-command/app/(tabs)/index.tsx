@@ -43,6 +43,10 @@ export default function Dashboard() {
           <Text style={{ color: C.text, fontSize: 15, fontWeight: '900', letterSpacing: 1 }}>↗ ANALIZA PROGRESU</Text>
           <Text style={{ color: C.muted, fontSize: 12, marginTop: 5 }}>Rekordy, historia ćwiczeń i porównanie sesji</Text>
         </Pressable>
+        <Pressable onPress={() => router.push('/rest')} style={{ backgroundColor: C.panel, borderWidth: 1, borderColor: C.line, borderRadius: 12, padding: 17, marginTop: 10 }}>
+          <Text style={{ color: C.text, fontSize: 15, fontWeight: '900', letterSpacing: 1 }}>◷ TIMER PRZERWY</Text>
+          <Text style={{ color: C.muted, fontSize: 12, marginTop: 5 }}>60, 90 lub 120 sekund · pauza i reset</Text>
+        </Pressable>
         <Eyebrow> / OSTATNIA AKTYWNOŚĆ</Eyebrow>
         <Panel style={{ marginTop: 10 }}>
           {latest ? <>

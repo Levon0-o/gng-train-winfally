@@ -35,6 +35,10 @@ export default function Dashboard() {
           <Text style={{ color: C.text, fontSize: 15, fontWeight: '900', letterSpacing: 1 }}>▤ BIBLIOTEKA PLANÓW</Text>
           <Text style={{ color: C.muted, fontSize: 12, marginTop: 5 }}>Wybierz szablon i zapisuj ćwiczenia krok po kroku</Text>
         </Pressable>
+        <Pressable onPress={() => router.push('/exercises')} style={{ backgroundColor: C.panel, borderWidth: 1, borderColor: C.line, borderRadius: 12, padding: 17, marginTop: 10 }}>
+          <Text style={{ color: C.text, fontSize: 15, fontWeight: '900', letterSpacing: 1 }}>▦ BIBLIOTEKA ĆWICZEŃ</Text>
+          <Text style={{ color: C.muted, fontSize: 12, marginTop: 5 }}>Wyszukiwarka, instrukcje ustawienia i własne ćwiczenia</Text>
+        </Pressable>
         <Eyebrow> / OSTATNIA AKTYWNOŚĆ</Eyebrow>
         <Panel style={{ marginTop: 10 }}>
           {latest ? <>
@@ -53,7 +57,7 @@ export default function Dashboard() {
           </View>
           <Text style={{ color: C.muted, fontSize: 12, marginTop: 6 }}>Dane są zapisywane na tym urządzeniu. Synchronizację w chmurze dodamy później.</Text>
         </Panel>
-        <Text style={{ color: '#626970', fontSize: 10, marginTop: 22, textAlign: 'center', letterSpacing: 1 }}>GYM COMMAND // BUILD 002</Text>
+        <Text style={{ color: '#626970', fontSize: 10, marginTop: 22, textAlign: 'center', letterSpacing: 1 }}>GYM COMMAND // BUILD 004</Text>
       </ScrollView>
     </Screen>
   );

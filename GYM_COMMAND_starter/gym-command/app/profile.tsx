@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { router } from 'expo-router';
-import { C, Eyebrow, Heading, Label, Panel } from '../src/components/UI';
-import { getProfile, saveProfile, UserProfile } from '../src/lib/profile';
+import { C, Eyebrow, Heading, Label, Panel, setAccentTheme } from '../src/components/UI';
+import { DEFAULT_PROFILE, getProfile, saveProfile, UserProfile } from '../src/lib/profile';
 import { getWorkouts } from '../src/lib/storage';
 
 const field = { backgroundColor: '#101214', borderWidth: 1, borderColor: C.line, borderRadius: 9, color: C.text, padding: 13, marginTop: 7 } as const;
 
 export default function ProfileScreen() {
-  const [profile, setProfile] = useState<UserProfile>({ displayName: 'ATHLETE', weeklyGoal: 3 });
+  const [profile, setProfile] = useState<UserProfile>(DEFAULT_PROFILE);
   const [saved, setSaved] = useState(false);
   const [workoutCount, setWorkoutCount] = useState(0);
 
   useEffect(() => {
-    getProfile().then(setProfile);
+    getProfile().then((next) => { setProfile(next); setAccentTheme(next.accentTheme); });
     getWorkouts().then((items) => setWorkoutCount(items.length));
   }, []);
 
@@ -22,6 +22,7 @@ export default function ProfileScreen() {
       const next = { ...profile, displayName: profile.displayName.trim() || 'ATHLETE' };
       await saveProfile(next);
       setProfile(next);
+      setAccentTheme(next.accentTheme);
       setSaved(true);
       Alert.alert('Profil zapisany', 'Ustawienia zapisano na tym urządzeniu.');
     } catch {

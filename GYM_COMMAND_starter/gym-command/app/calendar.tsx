@@ -1,9 +1,9 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
-import { C, Eyebrow, Heading, Label, Panel } from '../src/components/UI';
+import { C, Eyebrow, Heading, Label, Panel, setAccentTheme } from '../src/components/UI';
 import { getWorkouts, Workout } from '../src/lib/storage';
-import { getProfile, UserProfile } from '../src/lib/profile';
+import { DEFAULT_PROFILE, getProfile, UserProfile } from '../src/lib/profile';
 
 const dayKey = (date: Date) => {
   const y = date.getFullYear();
@@ -21,13 +21,13 @@ const monthLabel = (date: Date) => date.toLocaleDateString('pl-PL', { month: 'lo
 
 export default function CalendarScreen() {
   const [workouts, setWorkouts] = useState<Workout[]>([]);
-  const [profile, setProfile] = useState<UserProfile>({ displayName: 'ATHLETE', weeklyGoal: 3 });
+  const [profile, setProfile] = useState<UserProfile>(DEFAULT_PROFILE);
   const [month, setMonth] = useState(() => new Date(new Date().getFullYear(), new Date().getMonth(), 1));
   const [selected, setSelected] = useState(() => new Date());
 
   useFocusEffect(useCallback(() => {
     getWorkouts().then(setWorkouts);
-    getProfile().then(setProfile);
+    getProfile().then((next) => { setProfile(next); setAccentTheme(next.accentTheme); });
   }, []));
 
   const workoutDays = useMemo(() => {

@@ -1,9 +1,23 @@
 import React from 'react';
 import { View, Text, ViewStyle, TextStyle } from 'react-native';
+import { AccentTheme } from '../lib/profile';
+
+const accents: Record<AccentTheme, string> = {
+  red: '#E34B4B',
+  blue: '#4C9AD6',
+  green: '#55B88A',
+  amber: '#D69A4C',
+};
+let activeAccent: AccentTheme = 'red';
+
+export function setAccentTheme(theme: AccentTheme) {
+  activeAccent = theme;
+}
 
 export const C = {
   bg: '#101214', panel: '#191D21', panel2: '#22272C', line: '#343A40',
-  red: '#E34B4B', text: '#F1F2F3', muted: '#92999F', steel: '#B8C0C7',
+  get red() { return accents[activeAccent]; },
+  text: '#F1F2F3', muted: '#92999F', steel: '#B8C0C7',
   green: '#70B88A',
 };
 

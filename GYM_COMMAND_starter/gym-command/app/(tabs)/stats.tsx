@@ -7,8 +7,10 @@ import { getWorkouts, Workout } from '../../src/lib/storage';
 export default function Stats() {
   const [items, setItems] = useState<Workout[]>([]);
   useFocusEffect(useCallback(() => { getWorkouts().then(setItems); }, []));
-  const exerciseCount = items.reduce((s,w)=>s+w.exercises.length,0);
-  const setCount = items.reduce((s,w)=>s+w.exercises.reduce((x,e)=>x+e.sets,0),0);
+  const exerciseCount = items.reduce((sum, workout) => sum + workout.exercises.length, 0);
+  const setCount = items.reduce((sum, workout) => sum + workout.exercises.reduce((count, exercise) => count + (exercise.setDetails?.length ?? exercise.sets), 0), 0);
+  const totalReps = items.reduce((sum, workout) => sum + workout.exercises.reduce((count, exercise) => count + (exercise.setDetails?.reduce((s, set) => s + set.reps, 0) ?? exercise.reps * exercise.sets), 0), 0);
+
   return (
     <Screen>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 24 }}>
@@ -28,8 +30,8 @@ export default function Stats() {
           <Text style={{ color: C.text, fontSize: 32, fontWeight: '900', marginTop: 5 }}>{setCount}</Text>
         </Panel>
         <Panel>
-          <Text style={{ color: C.text, fontWeight: '800' }}>WYKRESY PROGRESU</Text>
-          <Text style={{ color: C.muted, marginTop: 6, lineHeight: 19 }}>Dodamy wykresy ciężaru i powtórzeń, gdy zbierzemy pierwsze dane z treningów.</Text>
+          <Text style={{ color: C.muted, fontSize: 11, fontWeight: '800' }}>ŁĄCZNIE POWTÓRZEŃ</Text>
+          <Text style={{ color: C.text, fontSize: 32, fontWeight: '900', marginTop: 5 }}>{totalReps}</Text>
         </Panel>
       </ScrollView>
     </Screen>

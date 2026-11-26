@@ -39,6 +39,14 @@ export default function Dashboard() {
           <Text style={{ color: C.text, fontSize: 15, fontWeight: '900', letterSpacing: 1 }}>▦ BIBLIOTEKA ĆWICZEŃ</Text>
           <Text style={{ color: C.muted, fontSize: 12, marginTop: 5 }}>Wyszukiwarka, instrukcje ustawienia i własne ćwiczenia</Text>
         </Pressable>
+        <Pressable onPress={() => router.push('/(tabs)/stats')} style={{ backgroundColor: '#22272C', borderWidth: 1, borderColor: C.red, borderRadius: 12, padding: 17, marginTop: 10 }}>
+          <Text style={{ color: C.text, fontSize: 15, fontWeight: '900', letterSpacing: 1 }}>↗ ANALIZA PROGRESU</Text>
+          <Text style={{ color: C.muted, fontSize: 12, marginTop: 5 }}>Rekordy, historia ćwiczeń i porównanie sesji</Text>
+        </Pressable>
+        <Pressable onPress={() => router.push('/rest')} style={{ backgroundColor: C.panel, borderWidth: 1, borderColor: C.line, borderRadius: 12, padding: 17, marginTop: 10 }}>
+          <Text style={{ color: C.text, fontSize: 15, fontWeight: '900', letterSpacing: 1 }}>◷ TIMER PRZERWY</Text>
+          <Text style={{ color: C.muted, fontSize: 12, marginTop: 5 }}>60, 90 lub 120 sekund · pauza i reset</Text>
+        </Pressable>
         <Eyebrow> / OSTATNIA AKTYWNOŚĆ</Eyebrow>
         <Panel style={{ marginTop: 10 }}>
           {latest ? <>
@@ -57,7 +65,7 @@ export default function Dashboard() {
           </View>
           <Text style={{ color: C.muted, fontSize: 12, marginTop: 6 }}>Dane są zapisywane na tym urządzeniu. Synchronizację w chmurze dodamy później.</Text>
         </Panel>
-        <Text style={{ color: '#626970', fontSize: 10, marginTop: 22, textAlign: 'center', letterSpacing: 1 }}>GYM COMMAND // BUILD 004</Text>
+        <Text style={{ color: '#626970', fontSize: 10, marginTop: 22, textAlign: 'center', letterSpacing: 1 }}>GYM COMMAND // BUILD 005</Text>
       </ScrollView>
     </Screen>
   );

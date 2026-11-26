@@ -8,6 +8,7 @@ export default function RootLayout() {
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: '#101214' } }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="log" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="rest" options={{ presentation: 'modal' }} />
       </Stack>
     </>
   );

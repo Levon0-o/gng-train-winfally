@@ -18,7 +18,6 @@ const mondayStart = (date: Date) => {
 };
 const sameDay = (a: Date, b: Date) => dayKey(a) === dayKey(b);
 const monthLabel = (date: Date) => date.toLocaleDateString('pl-PL', { month: 'long', year: 'numeric' });
-const shortDate = (date: string) => new Date(date).toLocaleDateString('pl-PL', { day: 'numeric', month: 'long' });
 
 export default function CalendarScreen() {
   const [workouts, setWorkouts] = useState<Workout[]>([]);

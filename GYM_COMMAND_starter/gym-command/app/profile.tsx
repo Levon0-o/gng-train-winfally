@@ -5,6 +5,8 @@ import { C, Eyebrow, Heading, Label, Panel, setAccentTheme } from '../src/compon
 import { DEFAULT_PROFILE, getProfile, saveProfile, UserProfile } from '../src/lib/profile';
 import { getWorkouts } from '../src/lib/storage';
 import { exportBackup, restoreBackup } from '../src/lib/backup';
+import * as DocumentPicker from 'expo-document-picker';
+import * as FileSystem from 'expo-file-system/legacy';
 import { syncWorkoutReminder } from '../src/lib/notifications';
 
 const field = { backgroundColor: '#101214', borderWidth: 1, borderColor: C.line, borderRadius: 9, color: C.text, padding: 13, marginTop: 7 } as const;
@@ -44,6 +46,24 @@ export default function ProfileScreen() {
       Alert.alert('Eksport nieudany', error instanceof Error ? error.message : 'Nie udało się utworzyć kopii.');
     } finally {
       setBusy(false);
+    }
+  };
+
+  const pickBackup = async () => {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: ['application/json', 'text/json', 'public.json'],
+        copyToCacheDirectory: true,
+        multiple: false,
+      });
+      if (result.canceled || !result.assets?.[0]) return;
+      const raw = await FileSystem.readAsStringAsync(result.assets[0].uri, {
+        encoding: FileSystem.EncodingType.UTF8,
+      });
+      setBackupText(raw);
+      Alert.alert('Plik wczytany', 'Sprawdź wybraną kopię i naciśnij PRZYWRÓĆ, aby zaimportować dane.');
+    } catch (error) {
+      Alert.alert('Nie udało się otworzyć pliku', error instanceof Error ? error.message : 'Spróbuj ponownie.');
     }
   };
 
@@ -121,6 +141,9 @@ export default function ProfileScreen() {
           <Text style={{ color: C.text, fontWeight: '900' }}>{busy ? 'PRZETWARZANIE…' : '⇩ EKSPORTUJ PLIK JSON'}</Text>
         </Pressable>
         <Label style={{ marginTop: 18 }}>IMPORT KOPII JSON</Label>
+        <Pressable disabled={busy} onPress={pickBackup} style={{ backgroundColor: C.panel2, borderWidth: 1, borderColor: C.red, borderRadius: 9, padding: 13, alignItems: 'center', marginTop: 10 }}>
+          <Text style={{ color: C.text, fontWeight: '900' }}>WYBIERZ PLIK JSON Z TELEFONU</Text>
+        </Pressable>
         <Text style={{ color: C.muted, fontSize: 10, lineHeight: 16, marginTop: 5 }}>Otwórz wcześniej zapisany plik JSON, skopiuj jego zawartość i wklej poniżej.</Text>
         <TextInput value={backupText} onChangeText={setBackupText} multiline placeholder="Wklej zawartość kopii JSON…" placeholderTextColor="#687078" style={[field, { minHeight: 110, textAlignVertical: 'top', fontFamily: 'monospace' }]} />
         <Pressable disabled={busy} onPress={doRestore} style={{ backgroundColor: C.panel2, borderWidth: 1, borderColor: C.line, borderRadius: 9, padding: 13, alignItems: 'center', marginTop: 10, opacity: busy ? 0.5 : 1 }}>

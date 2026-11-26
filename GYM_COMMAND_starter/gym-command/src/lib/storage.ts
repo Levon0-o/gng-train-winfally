@@ -63,3 +63,7 @@ export async function deleteWorkout(id: string): Promise<void> {
   const current = await getWorkouts();
   await AsyncStorage.setItem(KEY, JSON.stringify(current.filter((workout) => workout.id !== id)));
 }
+
+export async function replaceWorkouts(workouts: Workout[]): Promise<void> {
+  await AsyncStorage.setItem(KEY, JSON.stringify(workouts));
+}

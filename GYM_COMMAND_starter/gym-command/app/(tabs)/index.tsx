@@ -46,9 +46,9 @@ export default function Dashboard() {
           <Text style={{ color: C.muted, fontSize: 10, marginTop: 7 }}>Cel jest orientacyjny. Dostosuj aktywność do regeneracji i zaleceń specjalisty.</Text>
         </Panel>
         {profile.reminderEnabled ? <Panel style={{ marginTop: 10, borderColor: C.red }}>
-          <Label>PRZYPOMNIENIE W APLIKACJI</Label>
+          <Label>POWIADOMIENIE SYSTEMOWE</Label>
           <Text style={{ color: C.text, fontWeight: '900', marginTop: 7 }}>Plan na {reminderDayName} · {profile.reminderTime}</Text>
-          <Text style={{ color: C.muted, fontSize: 10, marginTop: 5 }}>To przypomnienie pojawia się po otwarciu aplikacji. Nie wysyła powiadomień w tle.</Text>
+          <Text style={{ color: C.muted, fontSize: 10, marginTop: 5 }}>Cotygodniowe powiadomienie systemowe. Wymaga zgody na powiadomienia w ustawieniach urządzenia.</Text>
         </Panel> : null}
         <Eyebrow> / AKCJA</Eyebrow>
         <Pressable onPress={() => router.push('/log')} style={{ backgroundColor: C.red, borderRadius: 12, padding: 18, marginTop: 10 }}>
@@ -97,7 +97,7 @@ export default function Dashboard() {
           </View>
           <Text style={{ color: C.muted, fontSize: 12, marginTop: 6 }}>Dane są zapisywane na tym urządzeniu. Synchronizację w chmurze dodamy później.</Text>
         </Panel>
-        <Text style={{ color: '#626970', fontSize: 10, marginTop: 22, textAlign: 'center', letterSpacing: 1 }}>GYM COMMAND // BUILD 009</Text>
+        <Text style={{ color: '#626970', fontSize: 10, marginTop: 22, textAlign: 'center', letterSpacing: 1 }}>GYM COMMAND // BUILD 010</Text>
       </ScrollView>
     </Screen>
   );

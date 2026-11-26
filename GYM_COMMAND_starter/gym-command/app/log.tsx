@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { C, Eyebrow, Heading, Panel, Label } from '../src/components/UI';
 import { saveWorkout, ExerciseEntry, SetEntry } from '../src/lib/storage';
+import { WORKOUT_TEMPLATES } from '../src/lib/templates';
 
 const field = { backgroundColor: '#101214', borderWidth: 1, borderColor: C.line, borderRadius: 9, color: C.text, padding: 12, marginTop: 6 } as const;
 
 export default function LogWorkout() {
+  const { templateId } = useLocalSearchParams<{ templateId?: string }>();
+  const template = WORKOUT_TEMPLATES.find((item) => item.id === templateId);
   const [title, setTitle] = useState('');
   const [notes, setNotes] = useState('');
   const [name, setName] = useState('');
@@ -14,6 +17,13 @@ export default function LogWorkout() {
   const [weight, setWeight] = useState('0');
   const [draftSets, setDraftSets] = useState<SetEntry[]>([]);
   const [exercises, setExercises] = useState<ExerciseEntry[]>([]);
+
+  useEffect(() => {
+    if (template) {
+      setTitle(template.title);
+      setName(template.exercises[0] ?? '');
+    }
+  }, [template?.id]);
 
   const addSet = () => {
     const r = Number(reps);
@@ -57,6 +67,8 @@ export default function LogWorkout() {
     }
   };
 
+  const remainingExercises = template?.exercises.filter((exercise) => !exercises.some((saved) => saved.name === exercise)) ?? [];
+
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1, backgroundColor: C.bg }}>
       <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 20, paddingTop: 58, paddingBottom: 40 }}>
@@ -66,7 +78,22 @@ export default function LogWorkout() {
         <Label style={{ marginTop: 22 }}>NAZWA TRENINGU</Label>
         <TextInput value={title} onChangeText={setTitle} placeholder="np. Upper Body A" placeholderTextColor="#687078" style={field} />
 
-        <Panel style={{ marginTop: 20 }}>
+        {template ? (
+          <Panel style={{ marginTop: 16 }}>
+            <Label>WYBRANY SZABLON · {template.title}</Label>
+            <Text style={{ color: C.muted, fontSize: 12, marginTop: 6, lineHeight: 18 }}>Wybierz ćwiczenie z listy. Po zapisaniu jego serii wybierz następne.</Text>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 7, marginTop: 12 }}>
+              {remainingExercises.map((exercise) => (
+                <Pressable key={exercise} onPress={() => { setName(exercise); setDraftSets([]); }} style={{ borderWidth: 1, borderColor: name === exercise ? C.red : C.line, backgroundColor: name === exercise ? '#3A2022' : C.panel2, borderRadius: 8, paddingVertical: 9, paddingHorizontal: 10 }}>
+                  <Text style={{ color: name === exercise ? '#FFFFFF' : C.steel, fontSize: 11, fontWeight: '800' }}>{exercise}</Text>
+                </Pressable>
+              ))}
+            </View>
+            <Text style={{ color: C.green, fontSize: 11, fontWeight: '800', marginTop: 12 }}>ZAPISANO: {exercises.length} / {template.exercises.length} ĆWICZEŃ</Text>
+          </Panel>
+        ) : null}
+
+        <Panel style={{ marginTop: 16 }}>
           <Text style={{ color: C.text, fontWeight: '900', fontSize: 16 }}>NOWE ĆWICZENIE</Text>
           <Label style={{ marginTop: 16 }}>NAZWA</Label>
           <TextInput value={name} onChangeText={setName} placeholder="np. Chest Press" placeholderTextColor="#687078" style={field} />

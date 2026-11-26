@@ -53,7 +53,7 @@ export default function Dashboard() {
           </View>
           <Text style={{ color: C.muted, fontSize: 12, marginTop: 6 }}>Dane są zapisywane na tym urządzeniu. Synchronizację w chmurze dodamy później.</Text>
         </Panel>
-        <Text style={{ color: '#626970', fontSize: 10, marginTop: 22, textAlign: 'center', letterSpacing: 1 }}>GYM COMMAND // BUILD 001</Text>
+        <Text style={{ color: '#626970', fontSize: 10, marginTop: 22, textAlign: 'center', letterSpacing: 1 }}>GYM COMMAND // BUILD 002</Text>
       </ScrollView>
     </Screen>
   );

@@ -1,0 +1,21 @@
+{
+  "expo": {
+    "name": "GYM COMMAND",
+    "slug": "gym-command",
+    "scheme": "gymcommand",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "plugins": [
+      "expo-router"
+    ],
+    "android": {
+      "package": "com.gymcommand.app"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.gymcommand.app"
+    }
+  }
+}

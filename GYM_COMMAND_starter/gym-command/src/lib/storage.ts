@@ -30,7 +30,6 @@ export async function getWorkouts(): Promise<Workout[]> {
     const raw = await AsyncStorage.getItem(KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw) as Workout[];
-    // Keep older saved sessions readable after the set-by-set update.
     return parsed.map((workout) => ({
       ...workout,
       exercises: workout.exercises.map((exercise) => ({
@@ -52,4 +51,15 @@ export async function getWorkouts(): Promise<Workout[]> {
 export async function saveWorkout(workout: Workout): Promise<void> {
   const current = await getWorkouts();
   await AsyncStorage.setItem(KEY, JSON.stringify([workout, ...current]));
+}
+
+export async function updateWorkout(updated: Workout): Promise<void> {
+  const current = await getWorkouts();
+  const next = current.map((workout) => workout.id === updated.id ? updated : workout);
+  await AsyncStorage.setItem(KEY, JSON.stringify(next));
+}
+
+export async function deleteWorkout(id: string): Promise<void> {
+  const current = await getWorkouts();
+  await AsyncStorage.setItem(KEY, JSON.stringify(current.filter((workout) => workout.id !== id)));
 }

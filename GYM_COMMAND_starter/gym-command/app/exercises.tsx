@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Alert, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { router } from 'expo-router';
 import { C, Eyebrow, Heading, Label, Panel } from '../src/components/UI';
+import ExerciseIllustration from '../src/components/ExerciseIllustration';
 import { BUILT_IN_EXERCISES, ExerciseCategory, ExerciseInfo, getCustomExercises, saveCustomExercise } from '../src/lib/exercises';
 
 const categories: Array<'WSZYSTKIE' | ExerciseCategory> = ['WSZYSTKIE', 'KLATKA', 'PLECY', 'BARKI', 'RAMIONA', 'CORE', 'NOGI', 'WŁASNE'];
@@ -55,20 +56,32 @@ export default function ExerciseLibrary() {
     }
   };
 
+  const categoryCount = (value: 'WSZYSTKIE' | ExerciseCategory) => value === 'WSZYSTKIE'
+    ? allExercises.length
+    : allExercises.filter((item) => item.category === value).length;
+
   return (
     <ScrollView style={{ flex: 1, backgroundColor: C.bg }} contentContainerStyle={{ padding: 20, paddingTop: 58, paddingBottom: 38 }} keyboardShouldPersistTaps="handled">
       <Pressable onPress={() => router.back()}><Text style={{ color: C.red, fontWeight: '900', letterSpacing: 1 }}>← WRÓĆ</Text></Pressable>
-      <Eyebrow>EXERCISE DATABASE / 05</Eyebrow>
+      <Eyebrow>EXERCISE DATABASE / 07</Eyebrow>
       <Heading>BIBLIOTEKA ĆWICZEŃ</Heading>
-      <Text style={{ color: C.muted, marginTop: 6, marginBottom: 16, lineHeight: 19 }}>Wyszukuj ćwiczenia, sprawdzaj ustawienie sprzętu i zapisuj własne pozycje.</Text>
+      <Text style={{ color: C.muted, marginTop: 6, marginBottom: 16, lineHeight: 19 }}>Katalog z kartami ruchu, filtrowaniem, wyszukiwaniem i własnymi pozycjami.</Text>
 
-      <TextInput value={query} onChangeText={setQuery} placeholder="Szukaj ćwiczenia lub sprzętu..." placeholderTextColor="#687078" style={field} />
+      <View style={{ backgroundColor: C.panel, borderWidth: 1, borderColor: C.line, borderRadius: 10, paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center' }}>
+        <Text style={{ color: C.muted, fontSize: 15, marginRight: 8 }}>⌕</Text>
+        <TextInput value={query} onChangeText={setQuery} placeholder="Szukaj ćwiczenia lub sprzętu..." placeholderTextColor="#687078" style={{ flex: 1, color: C.text, paddingVertical: 13, fontSize: 13 }} />
+        {query.length > 0 ? <Pressable onPress={() => setQuery('')}><Text style={{ color: C.red, fontWeight: '900', padding: 6 }}>WYCZYŚĆ</Text></Pressable> : null}
+      </View>
+
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 7, paddingVertical: 13 }}>
-        {categories.map((item) => (
-          <Pressable key={item} onPress={() => setCategory(item)} style={{ backgroundColor: category === item ? C.red : C.panel2, borderWidth: 1, borderColor: category === item ? C.red : C.line, borderRadius: 20, paddingVertical: 9, paddingHorizontal: 13 }}>
-            <Text style={{ color: '#FFFFFF', fontSize: 10, fontWeight: '900', letterSpacing: 0.6 }}>{item}</Text>
-          </Pressable>
-        ))}
+        {categories.map((item) => {
+          const active = category === item;
+          return (
+            <Pressable key={item} onPress={() => { setCategory(item); setExpanded(null); }} style={{ backgroundColor: active ? '#3A2022' : C.panel2, borderWidth: 1, borderColor: active ? C.red : C.line, borderRadius: 20, paddingVertical: 9, paddingHorizontal: 12 }}>
+              <Text style={{ color: active ? '#FFFFFF' : C.steel, fontSize: 10, fontWeight: '900', letterSpacing: 0.4 }}>{item} · {categoryCount(item)}</Text>
+            </Pressable>
+          );
+        })}
       </ScrollView>
 
       <Pressable onPress={() => setShowCreator((value) => !value)} style={{ backgroundColor: C.panel, borderWidth: 1, borderColor: C.line, borderRadius: 10, padding: 14, marginBottom: 14 }}>
@@ -98,14 +111,17 @@ export default function ExerciseLibrary() {
       ) : filtered.map((item) => {
         const isOpen = expanded === item.id;
         return (
-          <Panel key={item.id} style={{ marginBottom: 9, padding: 14 }}>
+          <Panel key={item.id} style={{ marginBottom: 10, padding: 12 }}>
             <Pressable onPress={() => setExpanded(isOpen ? null : item.id)}>
+              <ExerciseIllustration category={item.category} equipment={item.equipment} />
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
                 <View style={{ flex: 1 }}>
                   <Text style={{ color: C.text, fontSize: 15, fontWeight: '900' }}>{item.name}</Text>
-                  <Text style={{ color: C.muted, fontSize: 10, fontWeight: '800', letterSpacing: 0.7, marginTop: 5 }}>{item.category} · {item.equipment.toUpperCase()}</Text>
+                  <Text style={{ color: C.muted, fontSize: 10, fontWeight: '800', letterSpacing: 0.7, marginTop: 5 }}>{item.category} · {item.equipment.toUpperCase()}{item.custom ? ' · WŁASNE' : ''}</Text>
                 </View>
-                <Text style={{ color: C.red, fontSize: 18, fontWeight: '900' }}>{isOpen ? '−' : '+'}</Text>
+                <View style={{ width: 29, height: 29, borderRadius: 15, backgroundColor: '#302125', alignItems: 'center', justifyContent: 'center' }}>
+                  <Text style={{ color: C.red, fontSize: 18, fontWeight: '900' }}>{isOpen ? '−' : '+'}</Text>
+                </View>
               </View>
               <Text style={{ color: C.steel, fontSize: 12, lineHeight: 18, marginTop: 10 }}>{item.description}</Text>
             </Pressable>
@@ -120,7 +136,7 @@ export default function ExerciseLibrary() {
           </Panel>
         );
       })}
-      <Text style={{ color: '#737B82', fontSize: 10, lineHeight: 16, marginTop: 8 }}>Opisy są ogólnymi wskazówkami obsługi sprzętu. Nie zastępują instrukcji konkretnej maszyny ani instruktażu trenera. Po urazie dobór ćwiczeń i powrót do treningu skonsultuj z lekarzem lub fizjoterapeutą.</Text>
+      <Text style={{ color: '#737B82', fontSize: 10, lineHeight: 16, marginTop: 8 }}>Grafiki są schematycznymi ikonami sprzętu, a nie zdjęciami ani instrukcją anatomii. Opisy nie zastępują instrukcji konkretnej maszyny ani instruktażu trenera. Po urazie dobór ćwiczeń i powrót do treningu skonsultuj z lekarzem lub fizjoterapeutą.</Text>
     </ScrollView>
   );
 }

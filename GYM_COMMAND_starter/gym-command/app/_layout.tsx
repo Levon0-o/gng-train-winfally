@@ -3,13 +3,15 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { getProfile } from '../src/lib/profile';
 import { setAccentTheme } from '../src/components/UI';
+import { syncWorkoutReminder } from '../src/lib/notifications';
 
 export default function RootLayout() {
   const [themeReady, setThemeReady] = useState(false);
 
   useEffect(() => {
-    getProfile().then((profile) => {
+    getProfile().then(async (profile) => {
       setAccentTheme(profile.accentTheme);
+      await syncWorkoutReminder(profile);
       setThemeReady(true);
     }).catch(() => setThemeReady(true));
   }, []);
